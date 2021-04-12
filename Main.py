@@ -1,10 +1,15 @@
 import ctypes
 import os
-import threading
+from tkinter import messagebox
+import sys
+from threading import Thread
+import tkinter as tk
+import MessageBox
+import time
 
 Texts = []
-
-print(os.listdir())
+Windows = []
+Threads = []
 
 try:
     with open("SampleText.txt") as f:
@@ -12,10 +17,15 @@ try:
 except:
     raise SystemExit("Text file died, reclone repo or smth")
 
-def SetUp(Index):
-    if Index + 1 >= len(Texts):
-        return
-    ctypes.windll.user32.MessageBoxW(0, Texts[Index], str(round((Index/len(Texts)) * 100)) + "%", 0)
-    SetUp(Index + 1)
+def MakeNewVirusWindow(IntParam):
+    virus = MessageBox.MessageBox(tk.Toplevel(), str(round((IntParam/len(Texts)) * 100)) + "%", Texts[IntParam], IntParam)
 
-SetUp(0)
+
+def SetEverythingUp():
+    for i in range(len(Texts)):
+        x = Thread(target=lambda : [MakeNewVirusWindow(i)])
+        x.start()
+        Threads.append(x)
+
+if __name__ == "__main__":
+    SetEverythingUp()
